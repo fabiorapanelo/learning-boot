@@ -62,7 +62,6 @@ public class LearningBootApplication {
 	@Bean
 	public CommandLineRunner run4(@Autowired CustomerRepository customerRepository){
 		return args -> {
-			
 			List<String> list = Arrays.asList("Mario Rapanelo", "Lourdes Souza Rapanelo");
 	        list.stream().map(name -> new Customer(name)).forEach(customerRepository::save);
 			customerRepository.findAll().forEach(System.out::println);
