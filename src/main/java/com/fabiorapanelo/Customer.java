@@ -44,6 +44,12 @@ public class Customer {
 		this.id = id;
 		this.name = name;
 	}
+	
+	public Customer(Long id, String name, boolean flag) {
+		super();
+		this.id = id;
+		this.name = name;
+	}
 
 	@Override
 	public String toString() {

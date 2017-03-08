@@ -3,6 +3,11 @@ package com.fabiorapanelo;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -64,6 +69,53 @@ public class LearningBootApplication {
 		return args -> {
 			List<String> list = Arrays.asList("Mario Rapanelo", "Lourdes Souza Rapanelo");
 	        list.stream().map(name -> new Customer(name)).forEach(customerRepository::save);
+			customerRepository.findAll().forEach(System.out::println);
+		};
+	}
+	
+	@Bean
+	public CommandLineRunner playingWithLambdas(){
+		return args -> {
+			
+			String DOG = "DOG";
+			Predicate<String> isDog = p -> p.equals(DOG);
+			Predicate<String> isNotDog = isDog.negate();
+			
+			//DOG = "CAT"; // This can't happen
+			isDog.test("DOG"); //true
+			isNotDog.test("DOG"); //false
+			
+			//Supplier
+			Supplier<String> suplier = String::new;
+			Supplier<String> suplier2 = () -> new String();
+			suplier.get();
+			suplier2.get();
+			
+			CustomerFactory customerFactory = Customer::new;
+			System.out.println(customerFactory.create(1L, "Fabio", false));
+			
+			//Consuming
+			Consumer<String> consumer = (a -> System.out.println(a));
+			Consumer<String> consumer2 = (System.out::println);
+			consumer.accept("Hello Lambda");
+			consumer2.accept("Hello Lambda");
+			
+			
+			Function<String, String> toUpper = (p -> p.toUpperCase());
+			toUpper.apply("teste");
+			
+		};
+	}
+	
+	@Bean
+	public CommandLineRunner playingWithStream(@Autowired CustomerRepository customerRepository){
+		return args -> {
+			
+			Stream.iterate(0, i -> i + 1)
+				.limit(5000)
+				.map(i -> new Customer("Customer" + i))
+				.forEach(customerRepository::save);
+			
 			customerRepository.findAll().forEach(System.out::println);
 		};
 	}

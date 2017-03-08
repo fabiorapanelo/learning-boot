@@ -35,4 +35,17 @@ public class CustomerRestController {
 				.filter(customer -> customer.getName().contains(name))
 				.collect(Collectors.toList());
 	}
+	
+	@GetMapping("/customers/with-pagination")
+	public List<Customer> searchCustomersWithPagination(@RequestParam("pageSize") int pageSize, 
+			@RequestParam("pageNumber") int pageNumber){
+		
+		int startIndex = (pageSize * pageNumber) - pageSize;
+		
+		return customerRepository.findAll()
+				.stream()
+				.skip(startIndex)
+				.limit(pageSize)
+				.collect(Collectors.toList());
+	}
 }
